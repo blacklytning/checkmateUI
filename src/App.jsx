@@ -1,5 +1,7 @@
+import './App.css';
 import { useEffect, useState } from "react";
 import background from './assets/wall.jpg';
+import { FaChessKing, FaChessBishop, FaWhatsapp } from 'react-icons/fa'; // Added WhatsApp icon
 
 const usernames = [
   "blacklytning",
@@ -54,22 +56,31 @@ function App() {
       <div
         className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center"
         style={{
-          backgroundImage: `url(${background}), linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8))`,
+          backgroundImage: `url(${background}), linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1))`,
           backgroundSize: 'cover',
           backgroundAttachment: 'fixed',
           backgroundPosition: 'center',
           backgroundBlendMode: 'overlay',
         }}
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-600">Welcome to the Checkmate Club</h1>
+        <h1 className="text-4xl md:text-6xl font-bold mb-8 text-white">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-white text-6xl md:text-7xl">
+            Checkmate Club
+          </span>
+        </h1>
+        
         <p className="text-xl md:text-xl mb-10">Where Every Move Counts.</p>
+        
+        {/* Join the Club Button with WhatsApp Icon */}
         <a
           href="https://chat.whatsapp.com/HoAX4sKNxqpH8ba1faGuAh"
           target="_blank"
-          className="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-4 px-8 rounded-2xl transition text-lg md:text-xl"
+          className="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-4 px-8 rounded-2xl transition text-lg md:text-xl flex items-center justify-center space-x-4"
         >
-          Join the Club
+          <FaWhatsapp size={24} />
+          <span>Join the Club</span>
         </a>
+        
         <a href="#leaderboard" className="mt-12 text-purple-300 underline hover:text-purple-500 text-lg md:text-xl">
           ↓ View Leaderboard
         </a>
@@ -80,18 +91,20 @@ function App() {
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-12 text-purple-400">Leaderboard</h2>
 
         {/* Tabs for Blitz and Bullet */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-8 space-x-6">
           <button
             onClick={() => setActiveTab("blitz")}
-            className={`py-2 px-6 text-lg md:text-2xl font-semibold mr-4 rounded-xl ${activeTab === "blitz" ? "bg-purple-700 text-white" : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"}`}
+            className={`py-2 px-6 text-lg md:text-2xl font-semibold rounded-xl flex items-center space-x-2 ${activeTab === "blitz" ? "bg-purple-700 text-white" : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"}`}
           >
-            Blitz
+            <FaChessKing size={24} />
+            <span>Blitz</span>
           </button>
           <button
             onClick={() => setActiveTab("bullet")}
-            className={`py-2 px-6 text-lg md:text-2xl font-semibold rounded-xl ${activeTab === "bullet" ? "bg-purple-700 text-white" : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"}`}
+            className={`py-2 px-6 text-lg md:text-2xl font-semibold rounded-xl flex items-center space-x-2 ${activeTab === "bullet" ? "bg-purple-700 text-white" : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"}`}
           >
-            Bullet
+            <FaChessBishop size={24} />
+            <span>Bullet</span>
           </button>
         </div>
 
