@@ -1,22 +1,22 @@
 import './App.css';
 import { useEffect, useState } from "react";
 import background from './assets/wall.jpg';
-import { FaChessKing, FaChessBishop, FaChessKnight, FaWhatsapp } from 'react-icons/fa'; // Added Clock icon for Rapid
+import { FaChessKing, FaChessBishop, FaChessKnight, FaWhatsapp } from 'react-icons/fa';
+import { SiLichess } from "react-icons/si";
 
 const usernames = [
   "blacklytning",
   "DrNykterstein",
   "blapboi",
   "Fa_Mulan"
-]; // your custom usernames here
+];
 
 function App() {
   const [blitzRatings, setBlitzRatings] = useState([]);
   const [bulletRatings, setBulletRatings] = useState([]);
-  const [rapidRatings, setRapidRatings] = useState([]); // Added state for Rapid
-  const [activeTab, setActiveTab] = useState("blitz"); // Track the active tab
+  const [rapidRatings, setRapidRatings] = useState([]);
+  const [activeTab, setActiveTab] = useState("blitz");
 
-  // Fetch data for Blitz, Bullet, and Rapid
   useEffect(() => {
     const fetchRatings = async () => {
       const ratingsResults = await Promise.all(
@@ -28,7 +28,7 @@ function App() {
               username: data.username,
               blitzRating: data.perfs?.blitz?.rating || "N/A",
               bulletRating: data.perfs?.bullet?.rating || "N/A",
-              rapidRating: data.perfs?.rapid?.rating || "N/A", // Fetching Rapid rating
+              rapidRating: data.perfs?.rapid?.rating || "N/A",
             };
           } catch (err) {
             console.error(`Failed to fetch ${username}`, err);
@@ -36,27 +36,63 @@ function App() {
           }
         })
       );
-      // Sort blitz ratings
-      const blitzSorted = ratingsResults
-        .filter(u => typeof u.blitzRating === 'number')
-        .sort((a, b) => b.blitzRating - a.blitzRating);
-      setBlitzRatings(blitzSorted);
-      
-      // Sort bullet ratings
-      const bulletSorted = ratingsResults
-        .filter(u => typeof u.bulletRating === 'number')
-        .sort((a, b) => b.bulletRating - a.bulletRating);
-      setBulletRatings(bulletSorted);
 
-      // Sort rapid ratings
-      const rapidSorted = ratingsResults
-        .filter(u => typeof u.rapidRating === 'number')
-        .sort((a, b) => b.rapidRating - a.rapidRating);
-      setRapidRatings(rapidSorted); // Store sorted Rapid ratings
+      setBlitzRatings(
+        ratingsResults
+          .filter(u => typeof u.blitzRating === 'number')
+          .sort((a, b) => b.blitzRating - a.blitzRating)
+      );
+      setBulletRatings(
+        ratingsResults
+          .filter(u => typeof u.bulletRating === 'number')
+          .sort((a, b) => b.bulletRating - a.bulletRating)
+      );
+      setRapidRatings(
+        ratingsResults
+          .filter(u => typeof u.rapidRating === 'number')
+          .sort((a, b) => b.rapidRating - a.rapidRating)
+      );
     };
 
     fetchRatings();
   }, []);
+
+  const renderTable = (ratings, type) => (
+    <div className="max-w-4xl mx-auto bg-purple-950 bg-opacity-30 p-8 rounded-2xl shadow-xl">
+      {ratings.length > 0 ? (
+        <table className="min-w-full table-auto border-collapse">
+          <thead>
+            <tr className="border-b border-purple-700">
+              <th className="py-4 px-6 text-left text-2xl">Rank</th>
+              <th className="py-4 px-6 text-left text-2xl">Username</th>
+              <th className="py-4 px-6 text-left text-2xl">Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ratings.map((user, index) => (
+              <tr key={`${type}-${user.username}`} className="border-b border-purple-700">
+                <td className="py-4 px-6 text-xl">{index + 1}</td>
+                <td className="py-4 px-6 text-xl flex items-center space-x-2">
+                  <SiLichess size={20} className="text-purple-300" />
+                  <a
+                    href={`https://lichess.org/@/${user.username}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-300 hover:text-purple-500"
+                  >
+                    {user.username}
+                  </a>
+                </td>
+                <td className="py-4 px-6 text-xl">{user[`${type}Rating`]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-center text-xl">Loading {type.charAt(0).toUpperCase() + type.slice(1)} leaderboard...</p>
+      )}
+    </div>
+  );
 
   return (
     <div className="text-white">
@@ -79,7 +115,6 @@ function App() {
         
         <p className="text-xl md:text-xl mb-10">Where Every Move Counts.</p>
         
-        {/* Join the Club Button with WhatsApp Icon */}
         <a
           href="https://chat.whatsapp.com/HoAX4sKNxqpH8ba1faGuAh"
           target="_blank"
@@ -98,7 +133,7 @@ function App() {
       <div id="leaderboard" className="min-h-screen bg-black px-6 py-16">
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-12 text-purple-400">Leaderboard</h2>
 
-        {/* Tabs for Blitz, Bullet, and Rapid */}
+        {/* Tabs */}
         <div className="flex justify-center mb-8 space-x-6">
           <button
             onClick={() => setActiveTab("blitz")}
@@ -123,114 +158,10 @@ function App() {
           </button>
         </div>
 
-        {/* Leaderboard Tables */}
-        {activeTab === "blitz" && (
-          <div className="max-w-4xl mx-auto bg-purple-950 bg-opacity-30 p-8 rounded-2xl shadow-xl">
-            {blitzRatings.length > 0 ? (
-              <table className="min-w-full table-auto border-collapse">
-                <thead>
-                  <tr className="border-b border-purple-700">
-                    <th className="py-4 px-6 text-left text-2xl">Rank</th>
-                    <th className="py-4 px-6 text-left text-2xl">Username</th>
-                    <th className="py-4 px-6 text-left text-2xl">Rating</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {blitzRatings.map((user, index) => (
-                    <tr key={user.username} className="border-b border-purple-700">
-                      <td className="py-4 px-6 text-xl">{index + 1}</td>
-                      <td className="py-4 px-6 text-xl">
-                        <a
-                          href={`https://lichess.org/@/${user.username}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-purple-300 hover:text-purple-500"
-                        >
-                          {user.username}
-                        </a>
-                      </td>
-                      <td className="py-4 px-6 text-xl">{user.blitzRating}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-center text-xl">Loading Blitz leaderboard...</p>
-            )}
-          </div>
-        )}
-
-        {activeTab === "bullet" && (
-          <div className="max-w-4xl mx-auto bg-purple-950 bg-opacity-30 p-8 rounded-2xl shadow-xl">
-            {bulletRatings.length > 0 ? (
-              <table className="min-w-full table-auto border-collapse">
-                <thead>
-                  <tr className="border-b border-purple-700">
-                    <th className="py-4 px-6 text-left text-2xl">Rank</th>
-                    <th className="py-4 px-6 text-left text-2xl">Username</th>
-                    <th className="py-4 px-6 text-left text-2xl">Rating</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bulletRatings.map((user, index) => (
-                    <tr key={user.username} className="border-b border-purple-700">
-                      <td className="py-4 px-6 text-xl">{index + 1}</td>
-                      <td className="py-4 px-6 text-xl">
-                        <a
-                          href={`https://lichess.org/@/${user.username}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-purple-300 hover:text-purple-500"
-                        >
-                          {user.username}
-                        </a>
-                      </td>
-                      <td className="py-4 px-6 text-xl">{user.bulletRating}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-center text-xl">Loading Bullet leaderboard...</p>
-            )}
-          </div>
-        )}
-
-        {activeTab === "rapid" && (
-          <div className="max-w-4xl mx-auto bg-purple-950 bg-opacity-30 p-8 rounded-2xl shadow-xl">
-            {rapidRatings.length > 0 ? (
-              <table className="min-w-full table-auto border-collapse">
-                <thead>
-                  <tr className="border-b border-purple-700">
-                    <th className="py-4 px-6 text-left text-2xl">Rank</th>
-                    <th className="py-4 px-6 text-left text-2xl">Username</th>
-                    <th className="py-4 px-6 text-left text-2xl">Rating</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rapidRatings.map((user, index) => (
-                    <tr key={user.username} className="border-b border-purple-700">
-                      <td className="py-4 px-6 text-xl">{index + 1}</td>
-                      <td className="py-4 px-6 text-xl">
-                        <a
-                          href={`https://lichess.org/@/${user.username}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-purple-300 hover:text-purple-500"
-                        >
-                          {user.username}
-                        </a>
-                      </td>
-                      <td className="py-4 px-6 text-xl">{user.rapidRating}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-center text-xl">Loading Rapid leaderboard...</p>
-            )}
-          </div>
-        )}
+        {/* Render Leaderboard */}
+        {activeTab === "blitz" && renderTable(blitzRatings, "blitz")}
+        {activeTab === "bullet" && renderTable(bulletRatings, "bullet")}
+        {activeTab === "rapid" && renderTable(rapidRatings, "rapid")}
       </div>
     </div>
   );
