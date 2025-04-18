@@ -1,15 +1,9 @@
 import './App.css';
 import { useEffect, useState } from "react";
 import background from './assets/wall.jpg';
+import usernames from "./usernames";
 import { FaChessKing, FaChessBishop, FaChessKnight, FaWhatsapp } from 'react-icons/fa';
 import { SiLichess } from "react-icons/si";
-
-const usernames = [
-  "blacklytning",
-  "DrNykterstein",
-  "blapboi",
-  "Fa_Mulan"
-];
 
 function App() {
   const [blitzRatings, setBlitzRatings] = useState([]);
