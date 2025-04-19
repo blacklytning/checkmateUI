@@ -2,7 +2,6 @@
 
 const usernames = [
   "blacklytning",
-  "DrNykterstein",
   "blapboi",
   "Fa_Mulan"
 ];
