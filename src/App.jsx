@@ -44,22 +44,22 @@ function App() {
     }, []);
 
     const renderTable = (ratings, type) => (
-        <div className="overflow-x-auto max-w-4xl mx-auto bg-purple-950 bg-opacity-30 p-6 sm:p-8 rounded-2xl">
+        <div className="overflow-x-auto max-w-full md:max-w-4xl mx-auto bg-purple-950 bg-opacity-30 p-4 sm:p-6 rounded-xl sm:rounded-2xl">
             {ratings.length > 0 ? (
-                <table className="min-w-full table-auto border-collapse">
+                <table className="min-w-full table-auto border-collapse text-sm sm:text-base">
                     <thead>
                         <tr className="border-b border-purple-700">
-                            <th className="py-4 px-2 sm:px-4 text-left text-lg sm:text-2xl">Rank</th>
-                            <th className="py-4 px-2 sm:px-4 text-left text-lg sm:text-2xl">Username</th>
-                            <th className="py-4 px-2 sm:px-4 text-left text-lg sm:text-2xl">Rating</th>
+                            <th className="py-3 px-2 text-left">Rank</th>
+                            <th className="py-3 px-2 text-left">Username</th>
+                            <th className="py-3 px-2 text-left">Rating</th>
                         </tr>
                     </thead>
                     <tbody>
                         {ratings.map((user, index) => (
                             <tr key={`${type}-${user.username}`} className="border-b border-purple-700">
-                                <td className="py-4 px-2 sm:px-4 text-base sm:text-xl">{index + 1}</td>
-                                <td className="py-4 px-2 sm:px-4 text-base sm:text-xl flex items-center space-x-2">
-                                    <SiLichess size={18} className="text-purple-300" />
+                                <td className="py-3 px-2">{index + 1}</td>
+                                <td className="py-3 px-2 flex items-center space-x-2">
+                                    <SiLichess size={16} className="text-purple-300" />
                                     <a
                                         href={`https://lichess.org/@/${user.username}`}
                                         target="_blank"
@@ -69,13 +69,13 @@ function App() {
                                         {user.username}
                                     </a>
                                 </td>
-                                <td className="py-4 px-2 sm:px-4 text-base sm:text-xl">{user[`${type}Rating`]}</td>
+                                <td className="py-3 px-2">{user[`${type}Rating`]}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             ) : (
-                <p className="text-center text-lg sm:text-xl">Loading leaderboard...</p>
+                <p className="text-center text-base sm:text-lg">Loading leaderboard...</p>
             )}
         </div>
     );
@@ -83,75 +83,87 @@ function App() {
     return (
         <div className="text-white">
             {/* Hero Section */}
-                <div
-                    className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center px-4 text-center"
-                    style={{
-                        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95)), url(${background})`,
-                        backgroundSize: 'cover',
-                        backgroundAttachment: 'fixed',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                    }}
+            <div
+                className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center px-4 text-center"
+                style={{
+                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95)), url(${background})`,
+                    backgroundSize: 'cover',
+                    backgroundAttachment: 'fixed',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                }}
+            >
+                <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-white">
+                    Checkmate Club
+                </h1>
+
+                <p className="text-lg sm:text-xl mb-8 px-2">Where Every Move Counts.</p>
+
+                <a
+                    href="https://chat.whatsapp.com/HoAX4sKNxqpH8ba1faGuAh"
+                    target="_blank"
+                    className="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-xl transition text-sm sm:text-base flex items-center space-x-3"
                 >
-                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-white">
-                        Checkmate Club
-                    </h1>
+                    <FaWhatsapp size={20} />
+                    <span>Join the Club</span>
+                </a>
 
-                    <p className="text-lg sm:text-xl mb-8 px-2">Where Every Move Counts.</p>
-
-                    <a
-                        href="https://chat.whatsapp.com/HoAX4sKNxqpH8ba1faGuAh"
-                        target="_blank"
-                        className="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-3 px-6 sm:py-4 sm:px-8 rounded-2xl transition text-base sm:text-lg flex items-center space-x-3"
-                    >
-                        <FaWhatsapp size={22} />
-                        <span>Join the Club</span>
-                    </a>
-
-                    <a href="#leaderboard" className="mt-10 text-purple-300 underline hover:text-purple-500 text-base sm:text-lg">
-                        ↓ View Leaderboard
-                    </a>
-                </div>
-
-                {/* Leaderboard Section */}
-                <div id="leaderboard" className="min-h-screen bg-black px-4 sm:px-6 py-12 sm:py-16">
-                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mb-10 sm:mb-12 text-purple-400">
-                        Leaderboard
-                    </h2>
-
-                    {/* Tabs */}
-                    <div className="flex justify-center flex-wrap gap-4 sm:gap-6 mb-8">
-                        <button
-                            onClick={() => setActiveTab("blitz")}
-                            className={`py-2 px-5 text-base sm:text-xl font-semibold rounded-xl flex items-center space-x-2 ${activeTab === "blitz" ? "bg-purple-700 text-white" : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"}`}
-                        >
-                            <FaChessKing size={22} />
-                            <span>Blitz</span>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("bullet")}
-                            className={`py-2 px-5 text-base sm:text-xl font-semibold rounded-xl flex items-center space-x-2 ${activeTab === "bullet" ? "bg-purple-700 text-white" : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"}`}
-                        >
-                            <FaChessBishop size={22} />
-                            <span>Bullet</span>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("rapid")}
-                            className={`py-2 px-5 text-base sm:text-xl font-semibold rounded-xl flex items-center space-x-2 ${activeTab === "rapid" ? "bg-purple-700 text-white" : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"}`}
-                        >
-                            <FaChessKnight size={22} />
-                            <span>Rapid</span>
-                        </button>
-                    </div>
-
-                    {/* Render Table */}
-                    {activeTab === "blitz" && renderTable(blitzRatings, "blitz")}
-                    {activeTab === "bullet" && renderTable(bulletRatings, "bullet")}
-                    {activeTab === "rapid" && renderTable(rapidRatings, "rapid")}
-                </div>
+                <a href="#leaderboard" className="mt-8 text-purple-300 underline hover:text-purple-500 text-sm sm:text-base">
+                    ↓ View Leaderboard
+                </a>
             </div>
-            );
+
+            {/* Leaderboard Section */}
+            <div id="leaderboard" className="min-h-screen bg-black px-4 py-12 sm:py-16">
+                <h2 className="text-3xl sm:text-5xl font-bold text-center mb-10 text-purple-400">
+                    Leaderboard
+                </h2>
+
+                {/* Tabs */}
+                <div className="flex justify-center gap-2 sm:gap-4 mb-8 flex-wrap">
+                    <button
+                        onClick={() => setActiveTab("blitz")}
+                        className={`py-1 px-4 sm:px-5 text-sm sm:text-base font-semibold rounded-lg flex items-center space-x-2 ${
+                            activeTab === "blitz"
+                                ? "bg-purple-700 text-white"
+                                : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"
+                        }`}
+                    >
+                        <FaChessKing size={18} />
+                        <span>Blitz</span>
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("bullet")}
+                        className={`py-1 px-4 sm:px-5 text-sm sm:text-base font-semibold rounded-lg flex items-center space-x-2 ${
+                            activeTab === "bullet"
+                                ? "bg-purple-700 text-white"
+                                : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"
+                        }`}
+                    >
+                        <FaChessBishop size={18} />
+                        <span>Bullet</span>
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("rapid")}
+                        className={`py-1 px-4 sm:px-5 text-sm sm:text-base font-semibold rounded-lg flex items-center space-x-2 ${
+                            activeTab === "rapid"
+                                ? "bg-purple-700 text-white"
+                                : "bg-transparent text-purple-400 hover:bg-purple-700 hover:text-white"
+                        }`}
+                    >
+                        <FaChessKnight size={18} />
+                        <span>Rapid</span>
+                    </button>
+                </div>
+
+                {/* Render Table */}
+                {activeTab === "blitz" && renderTable(blitzRatings, "blitz")}
+                {activeTab === "bullet" && renderTable(bulletRatings, "bullet")}
+                {activeTab === "rapid" && renderTable(rapidRatings, "rapid")}
+            </div>
+        </div>
+    );
 }
 
-            export default App;
+export default App;
 
