@@ -4,11 +4,32 @@ import background from "./assets/wall.jpg";
 import { fetchUsernamesFromTeam } from "./usernames";
 import {
     FaChessKing,
+    FaChessQueen,
+    FaChessRook,
     FaChessBishop,
     FaChessKnight,
+    FaChessPawn,
     FaWhatsapp,
 } from "react-icons/fa";
 import { SiLichess } from "react-icons/si";
+
+// Array of chess icons to choose randomly
+const chessIcons = [
+    FaChessKing,
+    FaChessQueen,
+    FaChessRook,
+    FaChessBishop,
+    FaChessKnight,
+    FaChessPawn,
+];
+
+// Utility to assign a random icon to each user
+const assignRandomIcons = (users) => {
+    return users.map((user) => {
+        const Icon = chessIcons[Math.floor(Math.random() * chessIcons.length)];
+        return { ...user, icon: Icon };
+    });
+};
 
 function App() {
     const [blitzRatings, setBlitzRatings] = useState([]);
@@ -45,18 +66,20 @@ function App() {
                     }),
                 );
 
+                const withIcons = assignRandomIcons(results);
+
                 setBlitzRatings(
-                    results
+                    withIcons
                         .filter((u) => typeof u.blitzRating === "number")
                         .sort((a, b) => b.blitzRating - a.blitzRating),
                 );
                 setBulletRatings(
-                    results
+                    withIcons
                         .filter((u) => typeof u.bulletRating === "number")
                         .sort((a, b) => b.bulletRating - a.bulletRating),
                 );
                 setRapidRatings(
-                    results
+                    withIcons
                         .filter((u) => typeof u.rapidRating === "number")
                         .sort((a, b) => b.rapidRating - a.rapidRating),
                 );
@@ -80,26 +103,29 @@ function App() {
                         </tr>
                     </thead>
                     <tbody>
-                        {ratings.map((user, index) => (
-                            <tr
-                                key={`${type}-${user.username}`}
-                                className="border-b border-purple-700"
-                            >
-                                <td className="py-3 px-2">{index + 1}</td>
-                                <td className="py-3 px-2 flex items-center space-x-2">
-                                    <SiLichess size={16} className="text-purple-300" />
-                                    <a
-                                        href={`https://lichess.org/@/${user.username}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-purple-300 hover:text-purple-500 break-all"
-                                    >
-                                        {user.username}
-                                    </a>
-                                </td>
-                                <td className="py-3 px-2">{user[`${type}Rating`]}</td>
-                            </tr>
-                        ))}
+                        {ratings.map((user, index) => {
+                            const Icon = user.icon;
+                            return (
+                                <tr
+                                    key={`${type}-${user.username}`}
+                                    className="border-b border-purple-700"
+                                >
+                                    <td className="py-3 px-2">{index + 1}</td>
+                                    <td className="py-3 px-2 flex items-center space-x-2">
+                                        <Icon size={16} className="text-purple-300" />
+                                        <a
+                                            href={`https://lichess.org/@/${user.username}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-purple-300 hover:text-purple-500 break-all"
+                                        >
+                                            {user.username}
+                                        </a>
+                                    </td>
+                                    <td className="py-3 px-2">{user[`${type}Rating`]}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             ) : (
@@ -206,3 +232,4 @@ function App() {
 }
 
 export default App;
+
