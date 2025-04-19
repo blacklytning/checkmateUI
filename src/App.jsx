@@ -137,7 +137,14 @@ function App() {
                     <FaWhatsapp size={20} />
                     <span>Join the Club</span>
                 </a>
-
+                <a
+                    href="https://lichess.org/team/checkmate-club-apsit"
+                    target="_blank"
+                    className="mt-4 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-xl transition text-sm sm:text-base flex items-center space-x-3"
+                >
+                    <SiLichess size={20} />
+                    <span>Join Lichess Team</span>
+                </a>
                 <a
                     href="#leaderboard"
                     className="mt-30 text-purple-300 underline hover:text-purple-500 text-sm sm:text-base"
