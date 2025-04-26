@@ -52,30 +52,31 @@ function App() {
                 });
                 const usersData = await response.json();
 
-                const results = usersData.map(user => ({
-                    username: user.username,
-                    blitzRating: user.perfs?.blitz?.rating || "N/A",
-                    bulletRating: user.perfs?.bullet?.rating || "N/A",
-                    rapidRating: user.perfs?.rapid?.rating || "N/A",
-                }));
+                const results = usersData.map(user => {
+                    // Helper function to process rating
+                    const processRating = (rating, games) => {
+                        // If rating is 1500 and games is 0, set to -9999 to ensure they're at the end
+                        if (rating === 1500 && games === 0) return -9999;
+                        return rating;
+                    };
+
+                    return {
+                        username: user.username,
+                        blitzRating: processRating(user.perfs?.blitz?.rating || 1500, user.perfs?.blitz?.games || 0),
+                        bulletRating: processRating(user.perfs?.bullet?.rating || 1500, user.perfs?.bullet?.games || 0),
+                        rapidRating: processRating(user.perfs?.rapid?.rating || 1500, user.perfs?.rapid?.games || 0),
+                        rapidGames: user.perfs?.rapid?.games || 0,
+                        blitzGames: user.perfs?.blitz?.games || 0,
+                        bulletGames: user.perfs?.bullet?.games || 0,
+                    };
+                });
 
                 const withIcons = assignRandomIcons(results);
 
-                setBlitzRatings(
-                    withIcons
-                        .filter((u) => typeof u.blitzRating === "number")
-                        .sort((a, b) => b.blitzRating - a.blitzRating),
-                );
-                setBulletRatings(
-                    withIcons
-                        .filter((u) => typeof u.bulletRating === "number")
-                        .sort((a, b) => b.bulletRating - a.bulletRating),
-                );
-                setRapidRatings(
-                    withIcons
-                        .filter((u) => typeof u.rapidRating === "number")
-                        .sort((a, b) => b.rapidRating - a.rapidRating),
-                );
+                // Simple sort by rating (highest to lowest)
+                setBlitzRatings([...withIcons].sort((a, b) => b.blitzRating - a.blitzRating));
+                setBulletRatings([...withIcons].sort((a, b) => b.bulletRating - a.bulletRating));
+                setRapidRatings([...withIcons].sort((a, b) => b.rapidRating - a.rapidRating));
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
             }
@@ -115,7 +116,11 @@ function App() {
                                             {user.username}
                                         </a>
                                     </td>
-                                    <td className="py-3 px-2">{user[`${type}Rating`]}</td>
+                                    <td className="py-3 px-2">
+                                        {user[`${type}Rating`] === -9999
+                                            ? <span>N/A</span>
+                                            : user[`${type}Rating`]}
+                                    </td>
                                 </tr>
                             );
                         })}
