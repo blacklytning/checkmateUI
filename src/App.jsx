@@ -41,30 +41,23 @@ function App() {
         const fetchRatings = async () => {
             try {
                 const usernames = await fetchUsernamesFromTeam();
+                const usernamesString = usernames.join(',');
 
-                const results = await Promise.all(
-                    usernames.map(async (username) => {
-                        try {
-                            const res = await fetch(
-                                `https://lichess.org/api/user/${username}`,
-                            );
-                            const data = await res.json();
-                            return {
-                                username: data.username,
-                                blitzRating: data.perfs?.blitz?.rating || "N/A",
-                                bulletRating: data.perfs?.bullet?.rating || "N/A",
-                                rapidRating: data.perfs?.rapid?.rating || "N/A",
-                            };
-                        } catch {
-                            return {
-                                username,
-                                blitzRating: "Error",
-                                bulletRating: "Error",
-                                rapidRating: "Error",
-                            };
-                        }
-                    }),
-                );
+                const response = await fetch(`https://lichess.org/api/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: usernamesString
+                });
+                const usersData = await response.json();
+
+                const results = usersData.map(user => ({
+                    username: user.username,
+                    blitzRating: user.perfs?.blitz?.rating || "N/A",
+                    bulletRating: user.perfs?.bullet?.rating || "N/A",
+                    rapidRating: user.perfs?.rapid?.rating || "N/A",
+                }));
 
                 const withIcons = assignRandomIcons(results);
 
@@ -84,7 +77,7 @@ function App() {
                         .sort((a, b) => b.rapidRating - a.rapidRating),
                 );
             } catch (error) {
-                console.error("Failed to fetch usernames from team:", error);
+                console.error("Failed to fetch user data:", error);
             }
         };
 
